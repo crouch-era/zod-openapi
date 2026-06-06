@@ -1,0 +1,43 @@
+name: Publish to GitHub Packages
+
+# Publishes @crouch-era/zod-openapi to GitHub Packages using the repo's
+# built-in GITHUB_TOKEN. No npm account required.
+# Trigger manually (Actions tab → Run workflow) or by pushing a v* tag.
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Install from the default public npm registry (devDeps live there).
+      # `prepare` builds the package (skuba build-package) as part of install.
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build
+
+      # Publish only this package to GHP. publishConfig.registry in
+      # package.json already points npm publish at npm.pkg.github.com.
+      - name: Publish to GitHub Packages
+        run: |
+          echo "@crouch-era:registry=https://npm.pkg.github.com" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

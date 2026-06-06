@@ -1,7 +1,7 @@
 {
-  "name": "zod-openapi",
-  "version": "5.4.6",
-  "description": "Convert Zod Schemas to OpenAPI v3.x documentation",
+  "name": "@crouch-era/zod-openapi",
+  "version": "5.5.0",
+  "description": "Convert Zod Schemas to OpenAPI v3.x documentation (fork: OpenAPI 3.2 / itemSchema streaming)",
   "keywords": [
     "typescript",
     "json-schema",
@@ -11,13 +11,13 @@
     "zod",
     "zod-openapi"
   ],
-  "homepage": "https://github.com/samchungy/zod-openapi#readme",
+  "homepage": "https://github.com/crouch-era/zod-openapi#readme",
   "bugs": {
-    "url": "https://github.com/samchungy/zod-openapi/issues"
+    "url": "https://github.com/crouch-era/zod-openapi/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/samchungy/zod-openapi.git"
+    "url": "git+ssh://git@github.com/crouch-era/zod-openapi.git"
   },
   "funding": "https://github.com/samchungy/zod-openapi?sponsor=1",
   "license": "MIT",
@@ -86,8 +86,8 @@
       },
       "./package.json": "./package.json"
     },
-    "provenance": true,
-    "registry": "https://registry.npmjs.org/"
+    "provenance": false,
+    "registry": "https://npm.pkg.github.com/"
   },
   "skuba": {
     "entryPoint": "src/index.ts",
