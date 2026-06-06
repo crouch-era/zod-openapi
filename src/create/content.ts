@@ -63,12 +63,17 @@ export const createContent = (
 ): oas32.ContentObject => {
   const contentObject: oas32.ContentObject = {};
   for (const [mediaType, mediaTypeObject] of Object.entries(content)) {
-    if (mediaTypeObject) {
-      contentObject[mediaType] = createMediaTypeObject(mediaTypeObject, ctx, [
-        ...path,
-        mediaType,
-      ]);
+    if (!mediaTypeObject) {
+      continue;
     }
+    if ('$ref' in mediaTypeObject) {
+      contentObject[mediaType] = mediaTypeObject;
+      continue;
+    }
+    contentObject[mediaType] = createMediaTypeObject(mediaTypeObject, ctx, [
+      ...path,
+      mediaType,
+    ]);
   }
   return contentObject;
 };

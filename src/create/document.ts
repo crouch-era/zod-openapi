@@ -17,8 +17,11 @@ export interface ZodOpenApiMediaTypeObject extends Omit<
 }
 
 export interface ZodOpenApiContentObject {
-  'application/json'?: ZodOpenApiMediaTypeObject;
-  [mediatype: string]: ZodOpenApiMediaTypeObject | undefined;
+  'application/json'?: ZodOpenApiMediaTypeObject | oas32.ReferenceObject;
+  [mediatype: string]:
+    | ZodOpenApiMediaTypeObject
+    | oas32.ReferenceObject
+    | undefined;
 }
 
 export interface ZodOpenApiRequestBodyObject extends Omit<
@@ -156,6 +159,7 @@ export interface ZodOpenApiComponentsObject extends Omit<
   | 'callbacks'
   | 'securitySchemes'
   | 'examples'
+  | 'mediaTypes'
 > {
   parameters?: Record<string, ZodOpenApiParameterObject>;
   schemas?: Record<string, ZodOpenApiSchemaObject>;
@@ -167,6 +171,10 @@ export interface ZodOpenApiComponentsObject extends Omit<
   securitySchemes?: Record<string, ZodOpenApiSecuritySchemeObject>;
   links?: Record<string, ZodOpenApiLinkObject>;
   examples?: Record<string, ZodOpenApiExampleObject>;
+  mediaTypes?: Record<
+    string,
+    ZodOpenApiMediaTypeObject | oas32.ReferenceObject
+  >;
 }
 
 export type ZodOpenApiVersion = OpenApiVersion;

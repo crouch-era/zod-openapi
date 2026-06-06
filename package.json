@@ -1,6 +1,6 @@
 {
   "name": "@crouch-era/zod-openapi",
-  "version": "5.5.0",
+  "version": "5.5.1",
   "description": "Convert Zod Schemas to OpenAPI v3.x documentation (fork: OpenAPI 3.2 / itemSchema streaming)",
   "keywords": [
     "typescript",

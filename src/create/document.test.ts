@@ -150,102 +150,104 @@ describe('createDocument', () => {
     });
 
     expect(document).toMatchInlineSnapshot(`
-{
-  "info": {
-    "title": "My API",
-    "version": "1.0.0",
-  },
-  "openapi": "3.1.0",
-  "paths": {
-    "/users/{id}": {
-      "get": {
-        "parameters": [
-          {
-            "in": "cookie",
-            "name": "sessionId",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-          {
-            "in": "header",
-            "name": "Authorization",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-          {
-            "in": "query",
-            "name": "search",
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "name": {
+      {
+        "info": {
+          "title": "My API",
+          "version": "1.0.0",
+        },
+        "openapi": "3.1.0",
+        "paths": {
+          "/users/{id}": {
+            "get": {
+              "parameters": [
+                {
+                  "in": "cookie",
+                  "name": "sessionId",
+                  "required": true,
+                  "schema": {
                     "type": "string",
                   },
                 },
-                "required": [
-                  "name",
-                ],
-                "type": "object",
-              },
-            },
-          },
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                    },
-                    "name": {
-                      "type": "string",
+                {
+                  "in": "header",
+                  "name": "Authorization",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                  },
+                },
+                {
+                  "in": "path",
+                  "name": "id",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                  },
+                },
+                {
+                  "in": "query",
+                  "name": "search",
+                  "schema": {
+                    "type": "string",
+                  },
+                },
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "itemSchema": undefined,
+                    "schema": {
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                        },
+                      },
+                      "required": [
+                        "name",
+                      ],
+                      "type": "object",
                     },
                   },
-                  "required": [
-                    "id",
-                    "name",
-                  ],
-                  "type": "object",
                 },
               },
-            },
-            "description": "User found",
-            "headers": {
-              "X-RateLimit-Limit": {
-                "schema": {
-                  "type": "string",
+              "responses": {
+                "200": {
+                  "content": {
+                    "application/json": {
+                      "itemSchema": undefined,
+                      "schema": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                          },
+                          "name": {
+                            "type": "string",
+                          },
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                        ],
+                        "type": "object",
+                      },
+                    },
+                  },
+                  "description": "User found",
+                  "headers": {
+                    "X-RateLimit-Limit": {
+                      "schema": {
+                        "type": "string",
+                      },
+                    },
+                  },
                 },
               },
             },
           },
         },
-      },
-    },
-  },
-}
-`);
+      }
+    `);
   });
 
   it('should render a document with registered components', () => {
@@ -346,175 +348,178 @@ describe('createDocument', () => {
     });
 
     expect(document).toMatchInlineSnapshot(`
-{
-  "components": {
-    "callbacks": {
-      "registeredCallback": {
-        "{$request.query.callbackUrl}/data": {
-          "post": {
-            "requestBody": {
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/registeredCallbackRequestBodySchema",
+      {
+        "components": {
+          "callbacks": {
+            "registeredCallback": {
+              "{$request.query.callbackUrl}/data": {
+                "post": {
+                  "requestBody": {
+                    "content": {
+                      "application/json": {
+                        "itemSchema": undefined,
+                        "schema": {
+                          "$ref": "#/components/schemas/registeredCallbackRequestBodySchema",
+                        },
+                      },
+                    },
+                  },
+                  "responses": {
+                    "200": {
+                      "description": "Callback received",
+                    },
                   },
                 },
               },
             },
-            "responses": {
-              "200": {
-                "description": "Callback received",
+          },
+          "headers": {
+            "registeredHeader": {
+              "schema": {
+                "type": "string",
               },
             },
           },
-        },
-      },
-    },
-    "headers": {
-      "registeredHeader": {
-        "schema": {
-          "type": "string",
-        },
-      },
-    },
-    "parameters": {
-      "registeredCookie": {
-        "in": "cookie",
-        "name": "sessionId",
-        "required": true,
-        "schema": {
-          "type": "string",
-        },
-      },
-    },
-    "pathItems": {
-      "registeredPath": {
-        "get": {
-          "callbacks": {
-            "onData": {
-              "$ref": "#/components/callbacks/registeredCallback",
-            },
-          },
-          "parameters": [
-            {
-              "$ref": "#/components/parameters/registeredCookie",
-            },
-            {
-              "in": "header",
-              "name": "Authorization",
+          "parameters": {
+            "registeredCookie": {
+              "in": "cookie",
+              "name": "sessionId",
               "required": true,
               "schema": {
                 "type": "string",
               },
             },
-            {
-              "in": "path",
-              "name": "id",
-              "required": true,
-              "schema": {
-                "type": "string",
+          },
+          "pathItems": {
+            "registeredPath": {
+              "get": {
+                "callbacks": {
+                  "onData": {
+                    "$ref": "#/components/callbacks/registeredCallback",
+                  },
+                },
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/registeredCookie",
+                  },
+                  {
+                    "in": "header",
+                    "name": "Authorization",
+                    "required": true,
+                    "schema": {
+                      "type": "string",
+                    },
+                  },
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": {
+                      "type": "string",
+                    },
+                  },
+                  {
+                    "in": "query",
+                    "name": "search",
+                    "schema": {
+                      "type": "string",
+                    },
+                  },
+                ],
+                "requestBody": {
+                  "$ref": "#/components/requestBodies/registeredRequestBody",
+                },
+                "responses": {
+                  "200": {
+                    "$ref": "#/components/responses/registeredResponse",
+                  },
+                },
               },
             },
-            {
-              "in": "query",
-              "name": "search",
-              "schema": {
-                "type": "string",
+          },
+          "requestBodies": {
+            "registeredRequestBody": {
+              "content": {
+                "application/json": {
+                  "itemSchema": undefined,
+                  "schema": {
+                    "$ref": "#/components/schemas/registeredRequestBodySchema",
+                  },
+                },
               },
             },
-          ],
-          "requestBody": {
-            "$ref": "#/components/requestBodies/registeredRequestBody",
           },
           "responses": {
-            "200": {
-              "$ref": "#/components/responses/registeredResponse",
+            "registeredResponse": {
+              "content": {
+                "application/json": {
+                  "itemSchema": undefined,
+                  "schema": {
+                    "$ref": "#/components/schemas/registeredResponseSchema",
+                  },
+                },
+              },
+              "description": "User found",
+              "headers": {
+                "X-RateLimit-Limit": {
+                  "$ref": "#/components/headers/registeredHeader",
+                },
+              },
+            },
+          },
+          "schemas": {
+            "registeredCallbackRequestBodySchema": {
+              "properties": {
+                "data": {
+                  "type": "string",
+                },
+              },
+              "required": [
+                "data",
+              ],
+              "type": "object",
+            },
+            "registeredRequestBodySchema": {
+              "properties": {
+                "name": {
+                  "type": "string",
+                },
+              },
+              "required": [
+                "name",
+              ],
+              "type": "object",
+            },
+            "registeredResponseSchema": {
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                },
+                "name": {
+                  "type": "string",
+                },
+              },
+              "required": [
+                "id",
+                "name",
+              ],
+              "type": "object",
             },
           },
         },
-      },
-    },
-    "requestBodies": {
-      "registeredRequestBody": {
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/registeredRequestBodySchema",
-            },
+        "info": {
+          "title": "My API",
+          "version": "1.0.0",
+        },
+        "openapi": "3.1.0",
+        "paths": {
+          "/users/{id}": {
+            "$ref": "#/components/pathItems/registeredPath",
           },
         },
-      },
-    },
-    "responses": {
-      "registeredResponse": {
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/registeredResponseSchema",
-            },
-          },
-        },
-        "description": "User found",
-        "headers": {
-          "X-RateLimit-Limit": {
-            "$ref": "#/components/headers/registeredHeader",
-          },
-        },
-      },
-    },
-    "schemas": {
-      "registeredCallbackRequestBodySchema": {
-        "properties": {
-          "data": {
-            "type": "string",
-          },
-        },
-        "required": [
-          "data",
-        ],
-        "type": "object",
-      },
-      "registeredRequestBodySchema": {
-        "properties": {
-          "name": {
-            "type": "string",
-          },
-        },
-        "required": [
-          "name",
-        ],
-        "type": "object",
-      },
-      "registeredResponseSchema": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-          },
-          "name": {
-            "type": "string",
-          },
-        },
-        "required": [
-          "id",
-          "name",
-        ],
-        "type": "object",
-      },
-    },
-  },
-  "info": {
-    "title": "My API",
-    "version": "1.0.0",
-  },
-  "openapi": "3.1.0",
-  "paths": {
-    "/users/{id}": {
-      "$ref": "#/components/pathItems/registeredPath",
-    },
-  },
-}
-`);
+      }
+    `);
   });
 
   it('should work allow manual ids', () => {
@@ -561,6 +566,7 @@ describe('createDocument', () => {
             "some-response": {
               "content": {
                 "application/json": {
+                  "itemSchema": undefined,
                   "schema": {
                     "additionalProperties": false,
                     "properties": {
@@ -592,6 +598,7 @@ describe('createDocument', () => {
                 "200": {
                   "content": {
                     "application/json": {
+                      "itemSchema": undefined,
                       "schema": {
                         "additionalProperties": false,
                         "properties": {
@@ -666,6 +673,7 @@ describe('createDocument', () => {
                 "200": {
                   "content": {
                     "application/json": {
+                      "itemSchema": undefined,
                       "schema": {
                         "additionalProperties": false,
                         "properties": {

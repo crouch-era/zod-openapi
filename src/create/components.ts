@@ -3,13 +3,14 @@ import { type $ZodType, globalRegistry } from 'zod/v4/core';
 import type { OpenApiVersion } from '../openapi.js';
 import { isAnyZodType } from '../zod.js';
 
-import { createContent } from './content.js';
+import { createContent, createMediaTypeObject } from './content.js';
 import type {
   CreateDocumentOptions,
   ZodOpenApiCallbackObject,
   ZodOpenApiComponentsObject,
   ZodOpenApiExampleObject,
   ZodOpenApiLinkObject,
+  ZodOpenApiMediaTypeObject,
   ZodOpenApiOperationObject,
   ZodOpenApiPathItemObject,
   ZodOpenApiRequestBodyObject,
@@ -126,6 +127,13 @@ export interface ComponentRegistry {
         oas32.ExampleObject | oas32.ReferenceObject
       >;
     };
+    mediaTypes: {
+      ids: Map<string, oas32.MediaTypeObject | oas32.ReferenceObject>;
+      seen: WeakMap<
+        ZodOpenApiMediaTypeObject | oas32.ReferenceObject,
+        oas32.MediaTypeObject | oas32.ReferenceObject
+      >;
+    };
   };
   addSchema: (
     schema: $ZodType,
@@ -201,6 +209,13 @@ export interface ComponentRegistry {
       manualId?: string;
     },
   ) => oas32.ExampleObject | oas32.ReferenceObject;
+  addMediaType: (
+    mediaType: ZodOpenApiMediaTypeObject | oas32.ReferenceObject,
+    path: string[],
+    opts?: {
+      manualId?: string;
+    },
+  ) => oas32.MediaTypeObject | oas32.ReferenceObject;
 }
 
 export const createRegistry = (
@@ -248,6 +263,10 @@ export const createRegistry = (
         seen: new WeakMap(),
       },
       examples: {
+        ids: new Map(),
+        seen: new WeakMap(),
+      },
+      mediaTypes: {
         ids: new Map(),
         seen: new WeakMap(),
       },
@@ -744,6 +763,43 @@ export const createRegistry = (
 
       return exampleObject;
     },
+    addMediaType: (
+      mediaType,
+      path,
+      opts,
+    ): oas32.MediaTypeObject | oas32.ReferenceObject => {
+      const seenMediaType = registry.components.mediaTypes.seen.get(mediaType);
+      if (seenMediaType) {
+        return seenMediaType;
+      }
+
+      const mediaTypeObject =
+        '$ref' in mediaType
+          ? mediaType
+          : createMediaTypeObject(mediaType, { registry, io: 'output' }, path);
+
+      const id = opts?.manualId;
+
+      if (id) {
+        if (registry.components.mediaTypes.ids.has(id)) {
+          throw new Error(
+            `MediaType "${id}" at ${path.join(' > ')} is already registered`,
+          );
+        }
+        const ref: oas32.ReferenceObject = {
+          $ref: `#/components/mediaTypes/${id}`,
+        };
+        registry.components.mediaTypes.ids.set(id, mediaTypeObject);
+        registry.components.mediaTypes.seen.set(mediaType, ref);
+        if (opts?.manualId) {
+          return mediaTypeObject;
+        }
+        return ref;
+      }
+
+      registry.components.mediaTypes.seen.set(mediaType, mediaTypeObject);
+      return mediaTypeObject;
+    },
   };
 
   registerSchemas(components?.schemas, registry);
@@ -756,6 +812,7 @@ export const createRegistry = (
   registerSecuritySchemes(components?.securitySchemes, registry);
   registerLinks(components?.links, registry);
   registerExamples(components?.examples, registry);
+  registerMediaTypes(components?.mediaTypes, registry);
 
   return registry;
 };
@@ -948,6 +1005,21 @@ const registerExamples = (
   }
 };
 
+const registerMediaTypes = (
+  mediaTypes: ZodOpenApiComponentsObject['mediaTypes'],
+  registry: ComponentRegistry,
+): void => {
+  if (!mediaTypes) {
+    return;
+  }
+
+  for (const [key, mediaType] of Object.entries(mediaTypes)) {
+    registry.addMediaType(mediaType, ['components', 'mediaTypes', key], {
+      manualId: key,
+    });
+  }
+};
+
 const createIOSchemas = (ctx: {
   registry: ComponentRegistry;
   io: 'input' | 'output';
@@ -1047,6 +1119,11 @@ export const createComponents = (
   }
   if (registry.components.examples.ids.size > 0) {
     components.examples = Object.fromEntries(registry.components.examples.ids);
+  }
+  if (registry.components.mediaTypes.ids.size > 0) {
+    components.mediaTypes = Object.fromEntries(
+      registry.components.mediaTypes.ids,
+    );
   }
 
   return components;
